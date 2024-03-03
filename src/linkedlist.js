@@ -1,5 +1,4 @@
 import nodeMaker from './nodeMaker.js';
-import { prependToList, removeListEnd, printList, getListEnd, printListSize, getListHead, findByIndex, findIndex, listContains, insertValueAtIndex } from './linkedlistfns.js';
 
 export default function linkedList(headValue = null) {
 
@@ -7,9 +6,7 @@ export default function linkedList(headValue = null) {
 
     const append = (newValue, node = head) => {
         if(node.value == null) return head = nodeMaker(newValue);
-        else if(node.next == null) {
-            node.next = nodeMaker(newValue);
-        }
+        else if(node.next == null) node.next = nodeMaker(newValue);
         else {
             node = node.next;
             while(node) return append(newValue, node);
@@ -18,7 +15,7 @@ export default function linkedList(headValue = null) {
     }
 
     const removeAt = (index) => {
-        if (!head) return console.log('No head index.')
+        if (!head.value) throw new Error('No head index.')
         let oldNode = head;
         let newNode = head.next
         if (index < 1) return head = newNode;
@@ -45,5 +42,93 @@ export default function linkedList(headValue = null) {
         append,
         insertAt: (value, index) => insertValueAtIndex(value, index, head),
         removeAt
+    }
+}
+
+const prependToList = (newValue, head) => {
+    let oldHead = head;
+    head = nodeMaker(newValue);
+    head.next = oldHead;
+    return head;
+}
+
+function findByIndex (index, temp = head) {
+    for(let i = 0; i <= index; i++) {
+        if(!temp) return 'Index not in list.'
+        else if(i === index) return `Index ${index}: ${temp.value}`
+        temp = temp.next;
+    }
+    return 'Index not found.'
+}
+
+const listContains = (valueToCheckFor, temp = head) => {
+    if(temp.value == valueToCheckFor) return true
+    else if(temp.next) return listContains(valueToCheckFor, temp.next);
+    else return false;
+}
+
+const findIndex = (valueToCheckFor, temp = head) => {
+    let list = printList(temp);
+    list = list.split(' -> ');
+    for(const value of list) {
+        if(value === valueToCheckFor) return `${valueToCheckFor} is at index: ${list.indexOf(value)}`;
+    } return null;
+}
+
+const printList = function (temp = head, list = []) {
+    if (!temp.value) return 'List has no data.'
+    else list.push(temp.value);
+    while(temp.next) {
+        temp = temp.next;
+        list.push(temp.value);  
+    }
+    return list = list.join(' -> ')
+}
+
+function getListHead(head) {
+    return `List head: ${head.value}`;
+}
+
+const printListSize = (temp = head) => {
+    let count = 0;
+    if(!temp.value) return count;
+    if(!temp.next) return count = 1;
+    else while(temp.next) {
+        count += 1;
+        temp = temp.next;
+    }
+    return `List size: ${count}`
+}
+
+const getListEnd = (temp = head) => {
+    while(temp.next) temp = temp.next;
+    return `List tail: ${temp.value}`;
+}
+
+const removeListEnd = (temp = head) => {
+    let previous;
+    if(!temp.next) return temp.value = null;
+    else while(temp.next) {
+        previous = temp;
+        temp = temp.next;
+    }
+    previous.next = null;
+}
+
+const insertValueAtIndex = (value, index, node) => {
+    const newNode = nodeMaker(value);
+    let oldNode = node;
+    if(index < 1) {
+        return console.log('Use "prepend" method to replace list head.')
+    }
+    for(let i = 0; i <= index; i++) {
+        if(i === index) {
+            oldNode.next = newNode;
+            newNode.next = node;
+            return;
+        }
+        oldNode = node;
+        if(!node.next) return console.log('No such node in list.');
+        else node = node.next 
     }
 }
