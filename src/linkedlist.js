@@ -63,7 +63,7 @@ function findByIndex (index, temp = head) {
 }
 
 const listContains = (valueToCheckFor, temp = head) => {
-    if(!temp) return false
+    if(!temp.value) return false
     if(temp.value == valueToCheckFor) return true
     if(temp.value[0] && temp.value[0] == valueToCheckFor) return true
     else if(temp.next) return listContains(valueToCheckFor, temp.next);
@@ -92,19 +92,19 @@ function getListHead(head) {
 }
 
 const printListSize = (temp = head) => {
-    let count = 0;
-    if(!temp.value) return count;
-    if(!temp.next) return count = 1;
+    let count = 1;
+    if(!temp.value) return count = 0;
+    if(!temp.next) return count;
     else while(temp.next) {
         count += 1;
         temp = temp.next;
     }
-    return `List size: ${count}`
+    return count
 }
 
 const getListEnd = (temp = head) => {
     while(temp.next) temp = temp.next;
-    return temp.value;
+    return temp;
 }
 
 const removeListEnd = (temp = head) => {
