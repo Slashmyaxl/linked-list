@@ -30,6 +30,7 @@ export default function linkedList(headValue = null) {
     }
     
     return {
+        head,
         logHead: () => getListHead(head),
         logTail: () => getListEnd(head),
         print: () => printList(head),
@@ -55,24 +56,25 @@ const prependToList = (newValue, head) => {
 function findByIndex (index, temp = head) {
     for(let i = 0; i <= index; i++) {
         if(!temp) return 'Index not in list.'
-        else if(i === index) return `Index ${index}: ${temp.value}`
+        else if(i === index) return temp
         temp = temp.next;
     }
     return 'Index not found.'
 }
 
 const listContains = (valueToCheckFor, temp = head) => {
+    if(!temp) return false
     if(temp.value == valueToCheckFor) return true
+    if(temp.value[0] && temp.value[0] == valueToCheckFor) return true
     else if(temp.next) return listContains(valueToCheckFor, temp.next);
     else return false;
 }
 
-const findIndex = (valueToCheckFor, temp = head) => {
-    let list = printList(temp);
-    list = list.split(' -> ');
-    for(const value of list) {
-        if(value === valueToCheckFor) return `${valueToCheckFor} is at index: ${list.indexOf(value)}`;
-    } return null;
+const findIndex = (valueToCheckFor, temp = head, index = 0) => {
+    if (!temp.value) return null
+    if (temp.value == valueToCheckFor || (temp.value[0] && temp.value[0] == valueToCheckFor)) return index
+
+    return findIndex(valueToCheckFor, temp.next, index + 1)
 }
 
 const printList = function (temp = head, list = []) {
@@ -86,7 +88,7 @@ const printList = function (temp = head, list = []) {
 }
 
 function getListHead(head) {
-    return `List head: ${head.value}`;
+    return head;
 }
 
 const printListSize = (temp = head) => {
@@ -102,7 +104,7 @@ const printListSize = (temp = head) => {
 
 const getListEnd = (temp = head) => {
     while(temp.next) temp = temp.next;
-    return `List tail: ${temp.value}`;
+    return temp.value;
 }
 
 const removeListEnd = (temp = head) => {
