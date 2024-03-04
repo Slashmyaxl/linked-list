@@ -2,6 +2,7 @@ import linkedList from "./linkedlist.js";
 
 export default function hashMap (size) {
     let buckets = new Array(size);
+    let loadFactor = 0.75;
 
     const hash = (key) => {
         let hashCode = 0;
@@ -60,17 +61,40 @@ export default function hashMap (size) {
             })
         },
         keys: () => {
-            const bucketsArray = buckets;
             const listOfKeys = [];
-            bucketsArray.forEach(bucket => {
-                if(bucket.size() < 1) return
-                while(bucket.size() > 0) {
-                    console.log(bucket.logTail().value)
-                listOfKeys.push(bucket.logTail().value);
-                bucket.pop();
+            buckets.forEach(item => {
+                if(item.size() < 1) return
+                let temp = item.head
+                for(let i = 0; i < item.size(); i++) {
+                    listOfKeys.push(temp.value[0]);
+                    temp = temp.next;
                 }
             })
             return listOfKeys;
+        },
+        values: () => {
+            const listOfValues = [];
+            buckets.forEach(item => {
+                if(item.size() < 1) return
+                let temp = item.head
+                for(let i = 0; i < item.size(); i++) {
+                    listOfValues.push(temp.value[1]);
+                    temp = temp.next;
+                }
+            })
+            return listOfValues;
+        },
+        entries: () => {
+            const listOfEntries = [];
+            buckets.forEach(item => {
+                if(item.size() < 1) return
+                let temp = item.head
+                for(let i = 0; i < item.size(); i++) {
+                    listOfEntries.push(temp.value);
+                    temp = temp.next;
+                }
+            })
+            return listOfEntries;
         }
     }
 }
@@ -94,5 +118,3 @@ myBuckets.set('Carlos', 'has an office');
 myBuckets.set('Cake', 'is delicious');
 
 myBuckets.remove('Locke')
-
-console.log(myBuckets.keys())
