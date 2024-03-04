@@ -17,7 +17,7 @@ export default function hashMap (size) {
         buckets,
         set: function(key, value) {
             const index = hash(key);
-            if (!buckets[index]) buckets[index] = linkedList([key, value]);
+            if (!buckets[index] || !buckets[index].head.value) buckets[index] = linkedList([key, value]);
             else if (buckets[index].contains(key)) {
                 const linkedIndex = buckets[index].find(key);
                 buckets[index].at(linkedIndex).value = [key, value];
@@ -41,10 +41,36 @@ export default function hashMap (size) {
             const index = hash(key);
             if (buckets[index].contains(key)) {
                 const linkedIndex = buckets[index].find(key);
-                buckets[index].removeAt(linkedIndex);
+                if (linkedIndex === 0) buckets[index].pop();
+                else buckets[index].removeAt(linkedIndex);
                 return true
             }
             return false
+        },
+        length: () => {
+            let count = 0;
+            buckets.forEach(bucket => {
+                count += bucket.size();
+            })
+            return count
+        },
+        clear: () => {
+            buckets.forEach(bucket => {
+                while(bucket.head.value) bucket.pop();
+            })
+        },
+        keys: () => {
+            const bucketsArray = buckets;
+            const listOfKeys = [];
+            bucketsArray.forEach(bucket => {
+                if(bucket.size() < 1) return
+                while(bucket.size() > 0) {
+                    console.log(bucket.logTail().value)
+                listOfKeys.push(bucket.logTail().value);
+                bucket.pop();
+                }
+            })
+            return listOfKeys;
         }
     }
 }
@@ -67,9 +93,6 @@ myBuckets.set('Carlos', 'has an office');
 
 myBuckets.set('Cake', 'is delicious');
 
+myBuckets.remove('Locke')
 
-console.log(myBuckets.get('Locke'));
-console.log(myBuckets.remove('Locke'));
-console.log(myBuckets.buckets[15])
-console.log(myBuckets.has('Locke'));
-
+console.log(myBuckets.keys())
